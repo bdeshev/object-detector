@@ -1,13 +1,12 @@
 from ultralytics import YOLO
 
-# Load a COCO-pretrained YOLO11n model
-model = YOLO("yolo11n.pt")
+# Load a model
+model = YOLO("yolo11n.pt")  # load an official model
 
-# Train the model on the COCO8 example dataset for 100 epochs
-results = model.train(data="coco8.yaml", epochs=100, imgsz=640)
+# Predict with the model
+results = model(source = "0", show = True)  # predict on an image
 
-# Run inference with the YOLO11n model on the 'bus.jpg' image
-results = model("bus.png")
-
-for result in results:
-    result.show()
+# Access the results
+# for result in results:
+#     boxes = result.boxes  # get boxes
+#     classes = result.names  # get class names
