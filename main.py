@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from ultralytics import YOLO
+from ultralytics.engine.results import Results
 
 root = tk.Tk()
 root.withdraw()  # Hide the main window
@@ -10,7 +11,7 @@ root.withdraw()  # Hide the main window
 model = YOLO("yolo11n.pt")  # load an official model
 
 # Predict with the model (webcam)
-results = model(source="0", stream=True, show = True)  
+results: list[Results] = model(source="0", stream=True, show = True)
 
 def bear_detected():
     print("Open secret door")
