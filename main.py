@@ -1,3 +1,4 @@
+from datetime import datetime
 import tkinter as tk
 from tkinter import messagebox
 from ultralytics import YOLO
@@ -13,9 +14,20 @@ model = YOLO("yolo11n.pt")  # load an official model
 # Predict with the model (webcam)
 results: list[Results] = model(source="0", stream=True, show = True)
 
+last_alert = datetime.now()
+
 def bear_detected():
-    print("Open secret door")
-    messagebox.showinfo("SURPRISE!", "Secret door opened!")
+    global last_alert
+
+    now = datetime.now()
+    if (now - last_alert).total_seconds() > 2:
+        print("Open secret door")
+        last_alert = now
+        # Show a message box
+        messagebox.showinfo("SURPRISE!", "Secret door opened!")
+        root.update()
+    else:
+        print("Already alerted, waiting for next detection.")
 
 for result in results:
     boxes = result.boxes
