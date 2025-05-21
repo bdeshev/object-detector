@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 from datetime import datetime
->>>>>>> e39e0a9bab0fe00a46c8251b3d977b4f918c2794
 import tkinter as tk
 from tkinter import messagebox
 from ultralytics import YOLO
@@ -11,21 +8,10 @@ root = tk.Tk()
 root.withdraw()  # Hide the main window
 
 
-root = tk.Tk()
-root.withdraw()  # Hide the main window
-
-
 # Load a model
 model = YOLO("yolo11n.pt")  # load an official model
 
 # Predict with the model (webcam)
-<<<<<<< HEAD
-results = model(source="0", stream=True, show = True)  
-
-def bear_detected():
-    print("Open secret door")
-    messagebox.showinfo("SURPRISE!", "Secret door opened!")
-=======
 results: list[Results] = model(source="0", stream=True, show = True)
 
 last_alert = datetime.now()
@@ -42,7 +28,6 @@ def bear_detected():
         root.update()
     else:
         print("Already alerted, waiting for next detection.")
->>>>>>> e39e0a9bab0fe00a46c8251b3d977b4f918c2794
 
 for result in results:
     boxes = result.boxes
