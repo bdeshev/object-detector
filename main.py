@@ -1,32 +1,16 @@
-<<<<<<< HEAD
-=======
 from datetime import datetime
->>>>>>> e39e0a9bab0fe00a46c8251b3d977b4f918c2794
 import tkinter as tk
 from tkinter import messagebox
 from ultralytics import YOLO
 from ultralytics.engine.results import Results
+import cv2
 
 root = tk.Tk()
-root.withdraw()  # Hide the main window
+root.withdraw()
 
+model = YOLO("yolo11n.pt")
 
-root = tk.Tk()
-root.withdraw()  # Hide the main window
-
-
-# Load a model
-model = YOLO("yolo11n.pt")  # load an official model
-
-# Predict with the model (webcam)
-<<<<<<< HEAD
-results = model(source="0", stream=True, show = True)  
-
-def bear_detected():
-    print("Open secret door")
-    messagebox.showinfo("SURPRISE!", "Secret door opened!")
-=======
-results: list[Results] = model(source="0", stream=True, show = True)
+cap = cv2.VideoCapture(0)
 
 last_alert = datetime.now()
 
@@ -42,11 +26,20 @@ def bear_detected():
         root.update()
     else:
         print("Already alerted, waiting for next detection.")
->>>>>>> e39e0a9bab0fe00a46c8251b3d977b4f918c2794
 
-for result in results:
-    boxes = result.boxes
-    names = result.names
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+        
+    results = model(frame)
+    
+    annotated_frame = results[0].plot()
+    
+    cv2.imshow('YOLO Detection', annotated_frame)
+    
+    boxes = results[0].boxes
+    names = results[0].names
     if boxes is not None:
         for box in boxes:
             class_id = int(box.cls[0])
@@ -55,4 +48,9 @@ for result in results:
             if class_name == "teddy bear" and confidence >= 0.6:
                 bear_detected()
                 break
+    
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
+cap.release()
+cv2.destroyAllWindows()
