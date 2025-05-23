@@ -1,22 +1,27 @@
 import gradio as gr
 import numpy as np
 
-def flip_vertically(image):
-    if image is not None:
-        return np.flip(image, axis=0)
-    return None
+def sepia(input_img):
+    sepia_filter = np.array([
+        [0.393, 0.769, 0.189],
+        [0.349, 0.686, 0.168],
+        [0.272, 0.534, 0.131]
+    ])
+    sepia_img = input_img @ sepia_filter.T
+    sepia_img = np.clip(sepia_img, 0, 255)
+    sepia_img = sepia_img.astype(np.uint8)
+    return sepia_img
 
 with gr.Blocks() as demo:
-    gr.Markdown("# Live Video Flipper")
+    gr.Markdown("# Live Sepia Webcam")
     with gr.Row():
         webcam = gr.Image(sources="webcam", streaming=True)
         output = gr.Image()
     
-    webcam.change(
-        flip_vertically,
+    webcam.stream(
+        fn=sepia,
         inputs=webcam,
         outputs=output,
-        show_progress=False
     )
 
 if __name__ == "__main__":
